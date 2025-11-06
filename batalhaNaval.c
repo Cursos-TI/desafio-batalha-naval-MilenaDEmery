@@ -1,68 +1,87 @@
 #include <stdio.h>
 
+#define LINHAS 10 // Matriz 10x10 para o tabuleiro
+#define COLUNAS 10 // Matriz 10x10 para o tabuleiro
+#define AGUA 0 // Representa água no tabuleiro
+#define TAMANHO_NAVIO 3 // Tamanho do navio 
+#define NAVIO 3 // Representa navio no tabuleiro
+
 int main () {
     
-    int tabuleiro[10][10]; // Matriz 10x10 para o tabuleiro
+    int tabuleiro[LINHAS][COLUNAS];
     int i, j;
-    int Agua = 0; // Representa água no tabuleiro
-    int Navio = 3;
-    int TamanhoNavio = 3; 
 
     // Inicializa o tabuleiro com 0 (água)
-    for (i = 0; i < 10; i++) {
-        for (j = 0; j < 10; j++) {
-            tabuleiro[i][j] = Agua;
+    for (i = 0; i < LINHAS; i++) {
+        for (j = 0; j < COLUNAS; j++) {
+            tabuleiro[i][j] = AGUA;
         }
     }
 
     // ----- Coordenadas iniciais -----
     // Navio horizontal
-    int LinhaH = 2;
+    int linhaH = 2;
     int colunaH = 4;
    
     // Navio vertical
     int linhaV = 5;
-    int ColunaV = 7;
+    int colunaV = 7;
+
+    // Navio Diagonal descendo
+    int linhaD1 = 0;
+    int colunaD1 = 0;
+
+    // Navio Diagoanl subindo
+    int linhaD2 = 9;
+    int colunaD2 = 0;
 
     // Validação dos Limites
-    if (colunaH + TamanhoNavio > 10) {
-        printf("Erro: navio horizontal sai dos limites do tabuleiro.\n");
+    if (colunaH + TAMANHO_NAVIO > COLUNAS) {
+        printf("Erro: navio horizontal fora dos limites.\n");
         return 1;
     }
 
-    if (linhaV + TamanhoNavio > 10) {
-        printf("Erro: navio vertical sai dos limites do tabuleiro.\n");
+    if (linhaV + TAMANHO_NAVIO > LINHAS) {
+        printf("Erro: navio vertical fora dos limites.\n");
         return 1;
     }
 
-    // ----- Verificar sobreposição -----
-    int sobrepoe = 0;
-    for (i = 0; i < TamanhoNavio; i++) {
-        if (tabuleiro[LinhaH][colunaH + i] == Navio ||
-            tabuleiro[linhaV + i][ColunaV] == Navio) {
-            sobrepoe = 1;
-            break;
-        }    
+    if (linhaD1 + TAMANHO_NAVIO > LINHAS || colunaD1 + TAMANHO_NAVIO > COLUNAS) {
+        printf("Erro: navio diagonal (descendo) fora dos limites.\n");
+        return 1;
     }
 
-    if (sobrepoe) {
-        printf("Erro: navios se sobrepoem.\n");
+    if (linhaD2 - (TAMANHO_NAVIO - 1) < 0 || colunaD2 + TAMANHO_NAVIO > COLUNAS) {
+        printf("Erro: navio diagonal (subindo) fora dos limites.\n");
         return 1;
     }
     
-    //----- Posicionar o Navio Horizontal -----
-    for (i = 0; i < TamanhoNavio; i++) {
-        tabuleiro[LinhaH][colunaH + i] = Navio;
+    //----- Posicionar Navios -----
+    // Navio Horizontal
+    for (i = 0; i < TAMANHO_NAVIO; i++) {
+        tabuleiro[linhaH][colunaH + i] = NAVIO;
     }
 
-    // ----- Posicionar o Navio Vertical -----
-    for (i = 0; i < TamanhoNavio; i++) {
-        tabuleiro[linhaV + i][ColunaV] = Navio;
+    // Navio Vertical
+    for (i = 0; i < TAMANHO_NAVIO; i++) {
+        tabuleiro[linhaV + i][colunaV] = NAVIO;
     }
+
+    // Navio Diagonal descendo
+    for (i = 0; i < TAMANHO_NAVIO; i++) {
+        tabuleiro[linhaD1 + i][colunaD1 + i] = NAVIO;
+    }
+
+    // Navio Diagonal subindo
+    for (i = 0; i < TAMANHO_NAVIO; i++) {
+        tabuleiro[linhaD2 - i][colunaD2 + i] = NAVIO;
+    }
+
     // Exibir o tabuleiro
     printf("\n=== Tabuleiro de Batalha Naval ===\n\n");
-    for (i = 0; i < 10; i++) {
-        for (j = 0; j < 10; j++) {
+    
+    for (i = 0; i < LINHAS; i++) {
+        for (j = 0; j < COLUNAS; j++) {
             printf("%d ", tabuleiro[i][j]);
         }
         printf("\n");
